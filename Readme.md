@@ -63,12 +63,15 @@ ft.print(nans=False)
 
 ### Markdown compatible? You bet!
 
-`ft.print(format = 'markdown')`
+### Markdown compatible? You bet!
 
-         Freq    % Valid    % Valid Cum.    % Total    % Total Cum.
------  ------  ---------  --------------  ---------  --------------
-F         489      50.00           50.00      48.90           48.90
-M         489      50.00          100.00      48.90           97.80
-NaN        22                                  2.20          100.00
-Total     978     100.00          100.00     100.00          100.00
+`ft.print(format = 'pipe')`
+
+|       |   Freq |   % Valid |   % Valid Cum. |   % Total |   % Total Cum. |
+|:------|-------:|----------:|---------------:|----------:|---------------:|
+| F     |    489 |     50.00 |          50.00 |     48.90 |          48.90 |
+| M     |    489 |     50.00 |         100.00 |     48.90 |          97.80 |
+| NaN   |     22 |           |                |      2.20 |         100.00 |
+| Total |    978 |    100.00 |         100.00 |    100.00 |         100.00 |
+
 

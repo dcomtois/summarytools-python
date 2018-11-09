@@ -58,7 +58,7 @@ When switching format to 'pipe', we get pretty formatted markdown tables:
 
 ### Fancier console display
 
-When working in a regular Python console or in IPython, the 'pipe' format from tabular produces good results:
+When working in a regular Python console or in IPython, the 'fancy_grid' format from tabular produces good results:
 
 ```
 >>> freq(tobacco.gender, format = 'fancy_grid')

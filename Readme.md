@@ -10,7 +10,7 @@ Just copy the `summarytools.py` file in your `Python/Lib/site-packages` folder.
 
 ## Frequency tables with freq
 
-But first, a quick setup
+First, a quick setup
 
 ```
 >>> import pandas as pd
@@ -18,10 +18,10 @@ But first, a quick setup
 >>> from summarytools import freq
 ```
 
-Import a sample data:
+Import a sample dataset:
 
 ```
->>> tobacco = pd.read_csv("data/tobacco.csv", encoding='ansi')
+>>> tobacco = pd.read_csv("https://raw.githubusercontent.com/dcomtois/summarytools-python/master/data/tobacco.csv")
 ```
 
 ### Bare-bones example
@@ -40,11 +40,11 @@ NaN        25                                  2.50          100.00
 Total    1000     100.00          100.00     100.00          100.00
 ```
 
-The returned object is a pandas Dataframe, and it is displayed using the *tabulate* library. 
+The returned object is a pandas Dataframe, and it is displayed using the [tabulate](https://pypi.org/project/tabulate/) library. 
 
-### Markdown mode
+### Markdown formatting
 
-When switching format to 'pipe', we get pretty formatted markdown tables:
+When switching format to 'pipe', we get pretty formatted markdown tables where mardown is supported, such as here on GitHub.
 
 `>>> freq(tobacco.gender, format = 'pipe')`
 
@@ -93,7 +93,7 @@ For now, only a few parameters are implemented. We'll store a frequency table to
 | M   |    489 |     50.00 |         100.00 |     48.90 |          97.80 |
 | NaN |     22 |           |                |      2.20 |         100.00 |
 
-### Omit missing data reporting
+#### Omit missing data reporting
 ```
 >>> ft.print(nans=False)
 ```
@@ -103,7 +103,7 @@ For now, only a few parameters are implemented. We'll store a frequency table to
 | M     |    489 |     50.00 |         100.00 |
 | Total |    978 |    100.00 |         100.00 |
 
-### Control number of decimals to show
+#### Control number of decimals to show
 ```
 >>> ft.print(digits=1)
 ```

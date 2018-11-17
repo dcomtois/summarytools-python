@@ -12,24 +12,24 @@ Just copy the `summarytools.py` file in your `Python/Lib/site-packages` folder.
 
 First, a quick setup
 
-```
->>> import pandas as pd
->>> import numpy as np
->>> from summarytools import freq
+```python
+import pandas as pd
+from summarytools import freq
 ```
 
 Import a sample dataset:
 
-```
->>> tobacco = pd.read_csv("https://raw.githubusercontent.com/dcomtois/summarytools-python/master/data/tobacco.csv")
+```python
+link = "https://raw.githubusercontent.com/dcomtois/summarytools-python/master/data/tobacco.csv"
+tobacco = pd.read_csv(link)
 ```
 
 ### Bare-bones example
 
+```python
+freq(tobacco.age_gr)
 ```
->>> freq(tobacco.age_gr)
-
-
+```
          Freq    % Valid    % Valid Cum.    % Total    % Total Cum.
 -----  ------  ---------  --------------  ---------  --------------
 18-34     258      26.46           26.46      25.80           25.80
@@ -46,22 +46,26 @@ The returned object is a pandas Dataframe, and it is displayed using the [tabula
 
 When switching format to 'pipe', we get pretty formatted markdown tables where mardown is supported, such as here on GitHub.
 
-`>>> freq(tobacco.gender, format = 'pipe')`
-
+```python
+freq(tobacco.gender, format = 'pipe')
+```
+```
 |       |   Freq |   % Valid |   % Valid Cum. |   % Total |   % Total Cum. |
 |:------|-------:|----------:|---------------:|----------:|---------------:|
 | F     |    489 |     50.00 |          50.00 |     48.90 |          48.90 |
 | M     |    489 |     50.00 |         100.00 |     48.90 |          97.80 |
 | NaN   |     22 |           |                |      2.20 |         100.00 |
 | Total |    978 |    100.00 |         100.00 |    100.00 |         100.00 |
-
+```
 
 ### Fancier console display
 
 When working in a regular Python console or in IPython, the 'fancy_grid' format from tabular produces good results:
 
+```python
+freq(tobacco.gender, format = 'fancy_grid')
 ```
->>> freq(tobacco.gender, format = 'fancy_grid')
+```
 ╒═══════╤════════╤═══════════╤════════════════╤═══════════╤════════════════╕
 │       │   Freq │   % Valid │   % Valid Cum. │   % Total │   % Total Cum. │
 ╞═══════╪════════╪═══════════╪════════════════╪═══════════╪════════════════╡
@@ -79,13 +83,13 @@ When working in a regular Python console or in IPython, the 'fancy_grid' format 
 
 For now, only a few parameters are implemented. We'll store a frequency table to show how we can tweak the display after its creation, using the print() method.
 
-```
->>> ft = freq(tobacco.gender, format = 'pipe')
+```python
+ft = freq(tobacco.gender, format = 'pipe')
 ```
 
 #### Omit the Total row
-```
->>> ft.print(totals=False)
+```python
+ft.print(totals=False)
 ```
 |     |   Freq |   % Valid |   % Valid Cum. |   % Total |   % Total Cum. |
 |:----|-------:|----------:|---------------:|----------:|---------------:|
@@ -94,8 +98,8 @@ For now, only a few parameters are implemented. We'll store a frequency table to
 | NaN |     22 |           |                |      2.20 |         100.00 |
 
 #### Omit missing data reporting
-```
->>> ft.print(nans=False)
+```python
+ft.print(nans=False)
 ```
 |       |   Freq |   % Valid |   % Valid Cum. |
 |:------|-------:|----------:|---------------:|
@@ -104,8 +108,8 @@ For now, only a few parameters are implemented. We'll store a frequency table to
 | Total |    978 |    100.00 |         100.00 |
 
 #### Control number of decimals to show
-```
->>> ft.print(digits=1)
+```python
+ft.print(digits=1)
 ```
 |       |   Freq |   % Valid |   % Valid Cum. |   % Total |   % Total Cum. |
 |:------|-------:|----------:|---------------:|----------:|---------------:|

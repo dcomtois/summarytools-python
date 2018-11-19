@@ -27,8 +27,15 @@ class freq:
   weights -- not implemented yet
   
   """
-  def __init__(self, data, digits = 2, order = "names", format = "markdown", 
-               totals = True, nans = True, weights = None):
+  def __init__(self, data, # any iterable object with character or numeric data,
+               digits = 2, # Number of rounding digits (defaults to 2)
+               order = "names", # One of 'names' or 'values' 
+               format = "markdown", # Format for tabulate display (defaults to 'markdown'). Common values
+                                   # are 'pipe', 'grid', and 'fancy_grid'
+               totals = True, # Display last line of table containing totals (defaults to True)
+               nans = True, # Report missing data (NaN/None). Defaults to True.
+               weights = nan # Not implemented yet
+               ):
                  
     self.digits  = digits
     self.order   = order
@@ -46,27 +53,30 @@ class freq:
       data = np.array(data) # no need to replace here, NaN can't be in an integer array
     elif re.search('str', type(data[0]).__name__) != None:
       data = pd.Categorical(data)
-      data[pd.isnull(data)] = None
+      data[pd.isnull(data)] = nan
     else:
       print("Data type not recognized")
       return None
     
     counts = pd.value_counts(pd.Categorical(data), dropna=False, sort=False)
     rownames = list(counts.index)
-    
     has_nans = any(pd.isna(rownames))
-    
     if has_nans:
       rownames.pop(-1)
 
     rownames.extend(('NaN','Total'))
 
+    # Calculate frequencies when weights are not used
+    if not all(np.isnan(weights)):
+      for i in range(0, len(rownames) - 2):
+        counts[i] = sum(counts[0] * weights[data == rownames[0]])
+      counts[-1] = sum(counts[-1] * weights[np.isnan(data)])
+    
     # Calculate proportions
     prop_total = counts/np.asscalar(counts.sum())
     prop_total_cum = prop_total.cumsum()
     prop_total_cum[-1] = 1 # in case of rounding causing .999    
-    
-    
+
     if has_nans:
       prop_valid = pd.value_counts(data, dropna=True, sort=False) / \
                      np.asscalar(counts[0:len(counts)-1].sum())
@@ -75,6 +85,7 @@ class freq:
     else:
       prop_valid = prop_total
       prop_valid_cum = prop_total_cum
+
 
     # Convert elements to regular lists and add pertinent values
     counts = counts.tolist()
@@ -111,8 +122,6 @@ class freq:
     output.columns = ["Freq", "% Valid", "% Valid Cum.", "% Total", "% Total Cum."]
 
     self.output = output
-    
-    return None
   
   def __repr__(self):    
     if not self.nans:

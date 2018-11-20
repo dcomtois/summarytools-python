@@ -57,34 +57,55 @@ class freq:
     else:
       print("Data type not recognized")
       return None
-    
+
+
+    # Calculate raw frequencies
     counts = pd.value_counts(pd.Categorical(data), dropna=False, sort=False)
     rownames = list(counts.index)
     has_nans = any(pd.isna(rownames))
     if has_nans:
       rownames.pop(-1)
-
+      
     rownames.extend(('NaN','Total'))
 
-    # Calculate frequencies when weights are not used
-    if not all(np.isnan(weights)):
-      for i in range(0, len(rownames) - 2):
-        counts[i] = sum(counts[0] * weights[data == rownames[0]])
-      counts[-1] = sum(counts[-1] * weights[np.isnan(data)])
-    
-    # Calculate proportions
-    prop_total = counts/np.asscalar(counts.sum())
-    prop_total_cum = prop_total.cumsum()
-    prop_total_cum[-1] = 1 # in case of rounding causing .999    
+    # Calculate proportions - no weights
+    if re.search('bool', type(np.isnan((weights))).__name__) != None:
+      # Calculate proportions
+      prop_total = counts / np.asscalar(counts.sum())
+      prop_total_cum = prop_total.cumsum()
+      prop_total_cum[-1] = 1 # in case of rounding causing .999    
 
-    if has_nans:
-      prop_valid = pd.value_counts(data, dropna=True, sort=False) / \
-                     np.asscalar(counts[0:len(counts)-1].sum())
-      prop_valid_cum = prop_valid.cumsum()
-      prop_valid_cum[-1] = 1 # in case of rounding causing .999
+      if has_nans:
+        prop_valid = pd.value_counts(data, dropna=True, sort=False) / \
+                       np.asscalar(counts[0:len(counts)-1].sum())
+        prop_valid_cum = prop_valid.cumsum()
+        prop_valid_cum[-1] = 1 # in case of rounding causing .999
+      else:
+        prop_valid = prop_total
+        prop_valid_cum = prop_total_cum
+
+
+
+    # Calculate weighted frequencies and proportions
     else:
-      prop_valid = prop_total
-      prop_valid_cum = prop_total_cum
+      counts = counts.astype(np.float_)
+      
+      for i in range(0, len(rownames) - 2):
+        counts[i] = sum(weights[data == rownames[i]])
+      counts[-1] = sum(weights[pd.isna(data)])
+
+      # Calculate proportions
+      prop_total = counts / np.asscalar(counts.sum())
+      prop_total_cum = prop_total.cumsum()
+      prop_total_cum[-1] = 1 # in case of rounding causing .999    
+
+      if has_nans:
+        prop_valid = counts[0:-1] / np.asscalar(counts[0:len(counts)-1].sum())
+        prop_valid_cum = prop_valid.cumsum()
+        prop_valid_cum[-1] = 1 # in case of rounding causing .999
+      else:
+        prop_valid = prop_total
+        prop_valid_cum = prop_total_cum
 
 
     # Convert elements to regular lists and add pertinent values

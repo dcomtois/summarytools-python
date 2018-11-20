@@ -6,6 +6,8 @@ Created on Thu Nov  8 23:08:32 2018
 """
 import pandas as pd
 import numpy as np
+from summarytools import freq
+
 tobacco = pd.read_csv("data/tobacco.csv", encoding='ansi')
 
 freq(tobacco.age_gr)
@@ -17,9 +19,13 @@ ft.print(digits=1)
 ft.print(nans=False)
 ft.print(totals=False)
 
+freq(tobacco.age_gr, weights=tobacco.samp_wgts)
+
 color_list = np.array(('White', 'Black', 'Blue', 'Red', 'Yellow'))
 colors = color_list[np.random.randint(low = 0, high = 4, size = 500)]
 freq(colors)
 
 d = [i for i in range(0,10)]
 freq(d)
+
+
